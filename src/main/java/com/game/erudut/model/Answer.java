@@ -56,6 +56,7 @@ public class Answer {
 
     public void setCorrect(boolean isCorrect) {
         this.isCorrect = isCorrect;
+        // проверка правильного ответа шучу
     }
 }
 
