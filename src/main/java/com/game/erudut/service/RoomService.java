@@ -2,28 +2,35 @@ package com.game.erudut.service;
 
 import com.game.erudut.model.Player;
 import com.game.erudut.model.Room;
+import com.game.erudut.repository.RoomRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class RoomService {
-    private Map<Long, Room> rooms = new HashMap<>();
-
-    public Room createRoom() {
-        UUID uuid = UUID.randomUUID();
-        Long roomId = uuid.getMostSignificantBits() & Long.MAX_VALUE;
-        Room room = new Room(roomId);
-        rooms.put(roomId, room);
-        return room;
-    }
-
-    public Room joinRoom(Long roomId, Player player) {
-        Room room = rooms.get(roomId);
-        room.addPlayer(player);
-        return room;
-    }
+    @Autowired
+    private RoomRepository roomRepository;
+//    public void createRoom(Player player) {
+//        Room room=new Room();
+//        System.out.println(player.getName());
+//        List<Player> players = new ArrayList<>();
+//        players.add(player);
+//        room.setPlayers(players);
+//        room.setQuestions(null);
+//        room.setGameActive(true);
+//        room.setCurrentQuestionIndex(0);
+//        roomRepository.save(room);
+//    }
+//
+//    public Room joinRoom(Long roomId, Player player) {
+//       Room room = roomRepository.getById(roomId);
+//        List<Player> players = new ArrayList<>();
+//        players.add(player);
+//        room.setPlayers(players);
+//       roomRepository.save(room);
+//        return room;
+//    }
 }
 

@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 @Table(name = "question")
 @Entity
@@ -13,24 +12,20 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long questionId;      // Уникальный идентификатор вопроса
     private String questionText;
-    @ManyToMany
-    @JoinTable(name= "question_answers",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Collection<Role> roles;// Текст вопроса
-    private Map<Long, String> options;   // Варианты ответа (4 варианта)
-    private Long correctAnswer;   // Правильный ответ
-    // Уровень сложности (например, от 1 до 3)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Answers> answers;// Текст вопроса// Варианты ответа (4 варианта)
+    private int correct;   // Правильный ответ
+
 
     // Конструкторы
     public Question() {
     }
 
-    public Question(Long questionId, String questionText, Map<Long, String> options, Long correctAnswer) {
+    public Question(Long questionId, String questionText, List<Answers>answers, int correct) {
         this.questionId = questionId;
         this.questionText = questionText;
-        this.options = options;
-        this.correctAnswer = correctAnswer;
+        this.answers = answers;
+        this.correct = correct;
     }
 
     // Геттеры и сеттеры
@@ -50,21 +45,19 @@ public class Question {
         this.questionText = questionText;
     }
 
-    public Map<Long, String> getOptions() {
-        return options;
+    public int getCorrect() {
+        return correct;
     }
 
-    public void setOptions(Map<Long, String> options) {
-        this.options = options;
+    public void setCorrect(int correct) {
+        this.correct = correct;
     }
 
-    public Long getCorrectAnswer() {
-        return correctAnswer;
+    public List<Answers> getAnswers() {
+        return answers;
     }
 
-    public void setCorrectAnswer(Long correctAnswer) {
-        this.correctAnswer = correctAnswer;
+    public void setAnswers(List<Answers> answers) {
+        this.answers = answers;
     }
-
-
 }

@@ -3,40 +3,49 @@ package com.game.erudut.service;
 import com.game.erudut.model.Player;
 import com.game.erudut.model.Question;
 import com.game.erudut.model.Room;
+import com.game.erudut.repository.PlayerRepository;
 import com.game.erudut.repository.QuestionRepository;
+import com.game.erudut.repository.RoomRepository;
 import org.apache.logging.log4j.message.Message;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class GameService {
 
-    // Обработка ответа игрока
+    @Autowired
+    private RoomRepository roomRepository;
     public ResponseEntity<?> processAnswer(Message message) {
-        // Логика обработки сообщения и ответа, начисление баллов
+
         return ResponseEntity.ok("Ответ успешно обработан");
     }
     public QuestionRepository questionRepository;
-    // Обновление счета игрока
+    private PlayerRepository playerRepository;
+
     public void updatePlayerScore(String playerName, Long roomId) {
-        Room room = new Room(roomId); // Создаем комнату
-        Player player = room.getPlayerByName(playerName); // Находим игрока по имени
+        Room room = roomRepository.getById(roomId);
+        List<Player> players = room.getPlayers();
+        Player player = players.stream()
+                .filter(p -> p.getName().equals(playerName)) // Условие фильтрации по имени
+                .findFirst() // Получаем первого игрока, который соответствует условию
+                .orElseThrow(() -> new IllegalArgumentException("Player not found")); // Исключение, если игрок не найден
         player.setScore(player.getScore() + 10); // Добавляем 10 баллов за правильный ответ
     }
 
-    // Проверка правильности ответа
-    public boolean checkAnswer(Long questionId, Long answerId) {
-        Long correctAnswer = findCorrectAnswerByQuestionId(questionId); // Поиск правильного ответа
+    public boolean checkAnswer(Long questionId, int answerId) {
+        int correctAnswer = findCorrectAnswerByQuestionId(questionId); // Поиск правильного ответа
         if(answerId==correctAnswer)return true;
         else return false;
     }
 
-    // Метод для поиска правильного ответа по ID вопроса
-    public Long findCorrectAnswerByQuestionId(Long questionId) {
+    public int findCorrectAnswerByQuestionId(Long questionId) {
         // Логика получения вопроса и правильного ответа
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new RuntimeException("Вопрос не найден"));
-        return question.getCorrectAnswer();
+        return question.getCorrect();
     }
 }
 

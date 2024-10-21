@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 @Entity
 public class Player {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private int score;
@@ -35,6 +35,6 @@ public class Player {
         this.id = id;
     }
 
-    // геттеры, сеттеры, конструкторы
+
 }
 

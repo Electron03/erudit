@@ -11,22 +11,15 @@ import java.util.Optional;
 public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long roomId;                // Уникальный идентификатор комнаты
-    private List<Player> players;         // Список игроков, присоединившихся к комнате
-    private List<Question> questions;     // Список вопросов для текущей игры
+    private Long roomId;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)// Уникальный идентификатор комнаты
+    private List<Player> players = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(nullable = true)
+    private List<Question> questions = new ArrayList<>();    // Список вопросов для текущей игры
     private int currentQuestionIndex;     // Индекс текущего вопроса
     private boolean isGameActive;         // Состояние игры (активна или завершена)
 
-    // Конструкторы
-    public Room(Long roomId) {
-        this.roomId = roomId;
-        this.players = new ArrayList<>();
-        this.questions = new ArrayList<>();
-        this.currentQuestionIndex = 0;    // Игра начинается с первого вопроса
-        this.isGameActive = false;        // Игра по умолчанию неактивна
-    }
-
-    // Геттеры и сеттеры
     public Long getRoomId() {
         return roomId;
     }
